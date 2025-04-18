@@ -1,6 +1,7 @@
 import { Application } from "express";
-import { Model } from "./model/model";
-import { routePost } from "./routes/post";
+import { Model } from "../model/model";
+import { routePost } from "./post";
+import { routeAuth } from "./auth";
 
 /**
  * Setup routes for the application
@@ -11,4 +12,5 @@ export function routeApp(app: Application, model: Model) {
   });
 
   routePost(app, model);
+  routeAuth(app, model);
 }

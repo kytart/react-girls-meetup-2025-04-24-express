@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { routeApp } from './routes';
+import cookieParser from "cookie-parser";
+import { routeApp } from "./routes/routes";
 import { createModel } from './model/model';
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 (async () => {
   const model = await createModel();
