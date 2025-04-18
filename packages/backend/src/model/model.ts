@@ -1,6 +1,7 @@
 import { AsyncDatabase } from "promised-sqlite3";
 import { PostModel } from "../model/post";
 import { UserModel } from "./user";
+import { fillModelWithInitialData } from "./seed";
 
 export type Model = {
   post: PostModel;
@@ -16,5 +17,9 @@ export async function createModel(): Promise<Model> {
   await post.prepareSchema();
   await user.prepareSchema();
 
-  return { post, user };
+  const model: Model = { post, user };
+
+  await fillModelWithInitialData(model);
+
+  return model;
 }
