@@ -1,0 +1,17 @@
+{
+  "name": "@signageos/sample-app-common",
+  "version": "1.0.0",
+  "description": "Common utilities and types for the project",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.0"
+  }
+}
