@@ -1,3 +1,4 @@
+import { AsyncDatabase } from "promised-sqlite3";
 import { PostModel } from "../model/post";
 
 export type Model = {
@@ -5,6 +6,8 @@ export type Model = {
 };
 
 export async function createModel() {
-  const post = new PostModel();
+  const db = await AsyncDatabase.open(":memory:");
+  const post = new PostModel(db);
+  await post.prepareSchema();
   return { post };
 }
