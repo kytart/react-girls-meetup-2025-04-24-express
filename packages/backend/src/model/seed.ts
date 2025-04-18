@@ -1,3 +1,4 @@
+import { hashPassword } from "../auth/password";
 import { Model } from "./model";
 
 /**
@@ -25,20 +26,46 @@ export async function fillModelWithInitialData(model: Model) {
 }
 
 async function createUsers(model: Model) {
-  const user1 = await model.user.create({
+  const user1 = await createUser({
+    model,
     nickname: "Mike",
     password: "mike123",
   });
 
-  const user2 = await model.user.create({
+  const user2 = await createUser({
+    model,
     nickname: "Bobby",
     password: "bobby123",
   });
 
-  const user3 = await model.user.create({
+  const user3 = await createUser({
+    model,
     nickname: "Alice",
     password: "alice123",
   });
 
   return { user1, user2, user3 };
+}
+
+/**
+ * Hashes the password and creates a user in the database
+ */
+async function createUser({
+  model,
+  nickname,
+  password,
+}: {
+  model: Model;
+  nickname: string;
+  password: string;
+}) {
+  const hash = await hashPassword(password);
+  const user = {
+    nickname,
+    passwordHash: hash,
+  };
+
+  console.log("user", user);
+
+  return await model.user.create(user);
 }

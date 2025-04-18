@@ -3,6 +3,7 @@ import { Model } from "../model/model";
 import { serializeUser } from "../serialize";
 import { generateToken } from "../auth/tokenAuth";
 import { authenticateJWT } from "../auth/middleware";
+import { comparePassword } from "../auth/password";
 import { postAuthBodySchema } from "./validation";
 import { asyncHandler } from "./utils";
 
@@ -24,7 +25,11 @@ export function routeAuth(app: Application, model: Model) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      if (password !== user.password) {
+      const isPasswordValid = await comparePassword(
+        password,
+        user.passwordHash
+      );
+      if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 

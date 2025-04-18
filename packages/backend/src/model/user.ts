@@ -6,7 +6,7 @@ import { AsyncDatabase } from "promised-sqlite3";
 export type User = {
   id: number;
   nickname: string;
-  password: string;
+  passwordHash: string;
 };
 
 /**
@@ -20,7 +20,7 @@ export class UserModel {
    */
   public async prepareSchema() {
     await this.db.run(
-      "CREATE TABLE users (id INTEGER PRIMARY KEY, nickname TEXT, password TEXT)"
+      "CREATE TABLE users (id INTEGER PRIMARY KEY, nickname TEXT, passwordHash TEXT)"
     );
   }
 
@@ -34,9 +34,9 @@ export class UserModel {
 
   public async create(user: Omit<User, "id">): Promise<User> {
     const stmt = await this.db.prepare(
-      "INSERT INTO users (nickname, password) VALUES (?, ?)"
+      "INSERT INTO users (nickname, passwordHash) VALUES (?, ?)"
     );
-    const result = await stmt.run(user.nickname, user.password);
+    const result = await stmt.run(user.nickname, user.passwordHash);
     return { ...user, id: result.lastID };
   }
 }
