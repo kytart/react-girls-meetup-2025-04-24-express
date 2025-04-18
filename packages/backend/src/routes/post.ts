@@ -3,6 +3,7 @@ import { serializePost } from "@signageos/sample-app-common/src/post";
 import { Model } from "../model/model";
 import { authenticateJWT } from "../auth/middleware";
 import { postPostBodySchema } from "./validation";
+import { asyncHandler } from "./utils";
 
 /**
  * Setup routes related to posts
@@ -12,11 +13,14 @@ export function routePost(app: Application, model: Model) {
    * GET /post
    * Get list of posts
    */
-  app.get("/post", async (req, res) => {
-    const posts = await model.post.getList();
-    const serializedPosts = posts.map(serializePost);
-    res.json(serializedPosts);
-  });
+  app.get(
+    "/post",
+    asyncHandler(async (req, res) => {
+      const posts = await model.post.getList();
+      const serializedPosts = posts.map(serializePost);
+      res.json(serializedPosts);
+    })
+  );
 
   /**
    * POST /post
@@ -25,22 +29,26 @@ export function routePost(app: Application, model: Model) {
    * This route is protected by JWT authentication middleware
    * and returns 401 if the user is not authenticated.
    */
-  app.post("/post", authenticateJWT, async (req, res) => {
-    const { content } = postPostBodySchema.parse(req.body);
+  app.post(
+    "/post",
+    authenticateJWT,
+    asyncHandler(async (req, res) => {
+      const { content } = postPostBodySchema.parse(req.body);
 
-    // Validate required fields
-    if (!content) {
-      return res
-        .status(400)
-        .json({ error: "Content and author nickname are required" });
-    }
+      // Validate required fields
+      if (!content) {
+        return res
+          .status(400)
+          .json({ error: "Content and author nickname are required" });
+      }
 
-    await model.post.create({
-      content,
-      authorNickname: req.user!.nickname,
-      createdAt: new Date(),
-    });
+      await model.post.create({
+        content,
+        authorNickname: req.user!.nickname,
+        createdAt: new Date(),
+      });
 
-    res.sendStatus(201);
-  });
+      res.sendStatus(201);
+    })
+  );
 }
