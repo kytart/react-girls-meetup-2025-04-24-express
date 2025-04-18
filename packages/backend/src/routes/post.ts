@@ -1,6 +1,7 @@
 import { Application } from "express";
 import { serializePost } from "@signageos/sample-app-common/src/post";
 import { Model } from "../model/model";
+import { authenticateJWT } from "../auth/middleware";
 
 /**
  * Setup routes related to posts
@@ -23,17 +24,19 @@ export function routePost(app: Application, model: Model) {
    * This route is protected by JWT authentication middleware
    * and returns 401 if the user is not authenticated.
    */
-  app.post("/post", async (req, res) => {
-    const { content, authorNickname } = req.body;
-    
+  app.post("/post", authenticateJWT, async (req, res) => {
+    const { content } = req.body;
+
     // Validate required fields
-    if (!content || !authorNickname) {
-      return res.status(400).json({ error: 'Content and author nickname are required' });
+    if (!content) {
+      return res
+        .status(400)
+        .json({ error: "Content and author nickname are required" });
     }
 
     await model.post.create({
       content,
-      authorNickname,
+      authorNickname: req.user!.nickname,
       createdAt: new Date(),
     });
 

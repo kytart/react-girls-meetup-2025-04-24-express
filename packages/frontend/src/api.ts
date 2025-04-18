@@ -73,13 +73,13 @@ export async function getPosts(): Promise<Post[]> {
 /**
  * Create a new post
  */
-export async function createPost(content: string, authorNickname: string) {
+export async function createPost(content: string) {
   const response = await fetch(`${API_URL}/post`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ content, authorNickname }),
+    body: JSON.stringify({ content }),
     ...fetchOptions,
   });
 
