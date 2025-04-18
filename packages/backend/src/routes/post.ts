@@ -2,6 +2,7 @@ import { Application } from "express";
 import { serializePost } from "@signageos/sample-app-common/src/post";
 import { Model } from "../model/model";
 import { authenticateJWT } from "../auth/middleware";
+import { postPostBodySchema } from "./validation";
 
 /**
  * Setup routes related to posts
@@ -25,7 +26,7 @@ export function routePost(app: Application, model: Model) {
    * and returns 401 if the user is not authenticated.
    */
   app.post("/post", authenticateJWT, async (req, res) => {
-    const { content } = req.body;
+    const { content } = postPostBodySchema.parse(req.body);
 
     // Validate required fields
     if (!content) {

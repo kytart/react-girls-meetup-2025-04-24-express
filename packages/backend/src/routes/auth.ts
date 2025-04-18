@@ -3,6 +3,7 @@ import { Model } from "../model/model";
 import { serializeUser } from "../serialize";
 import { generateToken } from "../auth/tokenAuth";
 import { authenticateJWT } from "../auth/middleware";
+import { postAuthBodySchema } from "./validation";
 
 /**
  * Setup routes related to authentication
@@ -13,12 +14,7 @@ export function routeAuth(app: Application, model: Model) {
    * Authenticate user and return JWT token
    */
   app.post("/auth", async (req, res) => {
-    const { nickname, password } = req.body;
-
-    // Validate required fields
-    if (!nickname || !password) {
-      return res.status(400).json({ message: "Nickname and password are required" });
-    }
+    const { nickname, password } = postAuthBodySchema.parse(req.body);
 
     const user = await model.user.getOneByNickname(nickname);
     if (!user) {
