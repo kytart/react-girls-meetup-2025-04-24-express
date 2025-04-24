@@ -1,4 +1,4 @@
-# Monorepo Project
+# Sample app for React Girls meetup
 
 This is a monorepo project containing both backend and frontend applications.
 
@@ -23,4 +23,3 @@ This is a monorepo project containing both backend and frontend applications.
 
 - `npm run dev`: Start both backend and frontend in development mode
 - `npm run build`: Build both packages
-- `npm run test`: Run tests for all packages
